@@ -9,7 +9,8 @@ class RadiationCalculator:
         if radiation_list is None:
            self.radiation_list = [20, 28, 13, 1, 5, 6, 1, 1]
 
-    def coordinate_xyz(self, x, y, z, x0, y0, z0):
+    @staticmethod
+    def coordinate_xyz(x, y, z, x0, y0, z0):
         return (x - x0) * 2 + (y - y0) * 2 + (z - z0) * 2
 
     def radiation_at_point(self, x0, y0, z0, m, l, k, n, P, R, d):
