@@ -1,26 +1,24 @@
 import math
 
 
-class RadiationCalculator:
+class Radiation:
 
-    def __init__(self, x, z, N, radiation_list=None):
+    def __init__(self, x, z, N):
         self.x = x
         self. z = z
         self.N = N
-        if radiation_list is None:
-           self.radiation_list = [20, 28, 13, 1, 5, 6, 1, 1]
 
 
-class Radiation:
+class RadiationCalculator:
 
     def __init__(self):
         pass
 
     @staticmethod
-    def coordinate_xyz(x, y, z, x0, y0, z0):
+    def __coordinate_xyz(x, y, z, x0, y0, z0):
         return (x - x0)**2 + (y - y0)**2 + (z - z0)**2
 
-    def radiation_at_point(self, x0, y0, z0, m, l, k, n, P, R, d):
+    def __radiation_at_point(self, x0, y0, z0, m, l, k, n, P, R, d):
         L = 0
         for y in range(l, m):
             for z in range(l, m):
@@ -29,9 +27,9 @@ class Radiation:
                     L += (P * R**n) / (xyz * 2**math.sqrt(xyz) * (x - k)) / ((x - x0) * d)
         return L
 
-    def rad_calc(self, k, l, m, n, y0, d, P, R):
+    def get_wall_radiation(self, k, l, m, n, y0, d, P, R):
         radiation_list = []
         for x0 in range(l, k):
             for z0 in range(1, l):
-                radiation_list.append(RadiationCalculator(x0, z0, self.radiation_at_point(x0, y0, z0, m, l, k, n, P, R, d)))
+                radiation_list.append(Radiation(x0, z0, self.radiation_at_point(x0, y0, z0, m, l, k, n, P, R, d)))
         return radiation_list
