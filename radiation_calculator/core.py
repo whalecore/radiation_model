@@ -1,6 +1,6 @@
 import math
 
-from radiation_calculator.Radiation import Radiation
+from Radiation import Radiation
 
 
 def __coordinate_xyz(x, y, z, x0, y0, z0):
