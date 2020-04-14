@@ -1,6 +1,7 @@
 import math
-from .radiation import Radiation
+from .Radiation import Radiation
 from .utils import interval
+
 
 def __coordinate_xyz(x, y, z, x0, y0, z0):
     return (x - x0) ** 2 + (y - y0) ** 2 + (z - z0) ** 2
