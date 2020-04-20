@@ -1,6 +1,6 @@
 class Radiation:
-
-    def __init__(self, x, z, N):
+    """ Data class for storage dose of radiation at the point"""
+    def __init__(self, x, z, rad):
         self.x = x
         self.z = z
-        self.N = N
+        self.rad = rad
