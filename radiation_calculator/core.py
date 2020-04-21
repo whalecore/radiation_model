@@ -5,7 +5,7 @@ from .utils import interval
 
 def __coordinate_xyz(x, y, z, x0, y0, z0):
     """Method for calculating location relative to the origin coordinate"""
-    return (x - x0) ** 2 + (y - y0) ** 2 + (z - z0) ** 2
+    return ((x - x0) ** 2) + ((y - y0) ** 2) + ((z - z0) ** 2)
 
 
 def __radiation_at_point(x0, y0, z0, m, l, k, n, p, r, d):
@@ -117,8 +117,8 @@ def room_radiation(k, l, m, n, y0, d, p, r):
                     for y in interval(-n, -1):
                         xyz = __coordinate_xyz(x, y, z, x0, y0, z0)
                         rad += radiation_power / (xyz * 2 ** ((math.sqrt(xyz) * y) / ((y - y0) * d)))
-            for y in interval(1, m):
-                for z in interval(1, l - 2 * n):
+            for y in interval(l, m):
+                for z in interval(l, l - 2 * n):
                     for x in interval(k - 2 * n, k - n):
                         xyz = __coordinate_xyz(x, y, z, x0, y0, z0)
                         rad += radiation_power / (xyz * 2 ** ((math.sqrt(xyz) * (x - k + 2 * n)) / ((x - x0) * d)))
@@ -126,8 +126,8 @@ def room_radiation(k, l, m, n, y0, d, p, r):
                         xyz = __coordinate_xyz(x, y, z, x0, y0, z0)
                         rad += radiation_power / (xyz * 2 ** ((math.sqrt(xyz) * x) / ((x - x0) * d)))
             for x in interval(-n, k - n):
-                for y in interval(1, m):
-                    for z in interval(-n, -l):
+                for y in interval(l, m):
+                    for z in interval(-n, -1):
                         xyz = __coordinate_xyz(x, y, z, x0, y0, z0)
                         rad += radiation_power / (xyz * 2 ** ((math.sqrt(xyz) * z) / ((z - z0) * d)))
                     for z in interval(l - 2 * n, l - n):
