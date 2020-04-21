@@ -39,4 +39,4 @@ Clone the repo and run setup.py. This lib needs matplotlib to work properly.
 
 ## 3. Visualization
 * show_chart method:
-** Visualization class' method that builds a 3D graph of radiation levels in a room. It takes a list made with wall_radiation or room_radiation methods*
+** Visualization class' method that builds a 3D graph of radiation levels in a room. It takes a list made with wall_radiation or room_radiation methods**
