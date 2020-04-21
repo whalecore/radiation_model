@@ -21,7 +21,6 @@ Clone the repo and run setup.py. This lib needs matplotlib to work properly.
     * p: int, default = 1, the value of the radiation power at distance r from a single element
     * r: int, default = 1, a distance from a single element of wall
 
-Example of visualized output:
 ![Example 1](examples/example1.png?raw=true "Example 1")
 
 ## 2. Calculating radiation background in a room
@@ -40,7 +39,6 @@ Example of visualized output:
     * p: int, the value of the radiation power at distance r from a single element
     * r: int, distance from a single element of a wall
 
-Example of visualized output:
 ![Example 2](examples/example2.png?raw=true "Example 2")
 
 ## 3. Visualization
