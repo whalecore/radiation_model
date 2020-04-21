@@ -12,14 +12,17 @@ Clone the repo and run setup.py. This lib needs matplotlib to work properly.
     to the z axis. This method returns a list of radiation doses in each point
     of the y0 plane. It takes 8 parameters:
 
-    1. k: int, defines x-axis distance from the wall
-    2. l: int, defines z-axis wall size
-    3. m: int, defines y-axis wall size
-    4. n: int, defines x-axis wall size
-    5. y0: int, a distance to the plane along the y axis
-    6. d: int, a half attenuation thickness (constant dependent on wall material)
-    7. p: int, default = 1, the value of the radiation power at distance r from a single element
-    8. r: int, default = 1, a distance from a single element of wall
+    * k: int, defines x-axis distance from the wall
+    * l: int, defines z-axis wall size
+    * m: int, defines y-axis wall size
+    * n: int, defines x-axis wall size
+    * y0: int, a distance to the plane along the y axis
+    * d: int, a half attenuation thickness (constant dependent on wall material)
+    * p: int, default = 1, the value of the radiation power at distance r from a single element
+    * r: int, default = 1, a distance from a single element of wall
+
+Example of visualized output:
+![Example 1](examples/example1.png?raw=true "Example 1")
 
 ## 2. Calculating radiation background in a room
 
@@ -28,14 +31,17 @@ Clone the repo and run setup.py. This lib needs matplotlib to work properly.
     All parameters are relative to the wall, which is perpendicular to the axis x
     and parallel to the axis z. This method returns a list of radiation doses in each point of the y0 plane.
     It takes 8 parameters:
-    1. k: int, x-axis distance from the wall
-    2. l: int, z-axis wall size
-    3. m: int, y-axis wall size
-    4. n: int, x-axis wall size
-    5. y0: int, distance to the plant along the y axis
-    6. d: int, half attenuation thickness (constant dependent on wall material)
-    7. p: int, the value of the radiation power at distance r from a single element
-    8. r: int, distance from a single element of a wall
+    * k: int, x-axis distance from the wall
+    * l: int, z-axis wall size
+    * m: int, y-axis wall size
+    * n: int, x-axis wall size
+    * y0: int, distance to the plant along the y axis
+    * d: int, half attenuation thickness (constant dependent on wall material)
+    * p: int, the value of the radiation power at distance r from a single element
+    * r: int, distance from a single element of a wall
+
+Example of visualized output:
+![Example 2](examples/example2.png?raw=true "Example 2")
 
 ## 3. Visualization
 * show_chart method:
