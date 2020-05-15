@@ -1,6 +1,8 @@
 import math
-from .Radiation import Radiation
-from .utils import interval
+
+from radiation_calculator.exceptions import IncorrectValues
+from radiation_calculator.Radiation import Radiation
+from radiation_calculator.utils import interval
 
 
 def __coordinate_xyz(x, y, z, x0, y0, z0):
@@ -61,12 +63,15 @@ def wall_radiation(k, l, m, n, y0, d, p=1, r=1):
     :rtype List[Radiation]
 
     """
-    radiation_list = []
-    for x0 in interval(1, k - 1):
-        for z0 in interval(1, l - 1):
-            rap = __radiation_at_point(x0, y0, z0, m, l, k, n, p, r, d)
-            radiation_list.append(Radiation(x0, z0, rap))
-    return radiation_list
+    try:
+        radiation_list = []
+        for x0 in interval(1, k - 1):
+            for z0 in interval(1, l - 1):
+                rap = __radiation_at_point(x0, y0, z0, m, l, k, n, p, r, d)
+                radiation_list.append(Radiation(x0, z0, rap))
+        return radiation_list
+    except ZeroDivisionError:
+        raise IncorrectValues('Переданы некорректные значения')
 
 
 def room_radiation(k, l, m, n, y0, d, p, r):
@@ -104,34 +109,86 @@ def room_radiation(k, l, m, n, y0, d, p, r):
         :rtype List[Radiation]
 
     """
-    radiation_list = []
-    radiation_power = __radiation_power(p, r)
-    for x0 in interval(1, (k - 2 * n - 1)):
-        for z0 in interval(1, (l - 2 * n - 1)):
-            rad = 0
-            for x in interval(-n, (k - n)):
-                for z in interval(-n, (l - n)):
-                    for y in interval(m, m + n):
-                        xyz = __coordinate_xyz(x, y, z, x0, y0, z0)
-                        rad += radiation_power / (xyz * 2 ** ((math.sqrt(xyz) * (y - m)) / ((y - y0) * d)))
-                    for y in interval(-n, -1):
-                        xyz = __coordinate_xyz(x, y, z, x0, y0, z0)
-                        rad += radiation_power / (xyz * 2 ** ((math.sqrt(xyz) * y) / ((y - y0) * d)))
-            for y in interval(l, m):
-                for z in interval(l, l - 2 * n):
-                    for x in interval(k - 2 * n, k - n):
-                        xyz = __coordinate_xyz(x, y, z, x0, y0, z0)
-                        rad += radiation_power / (xyz * 2 ** ((math.sqrt(xyz) * (x - k + 2 * n)) / ((x - x0) * d)))
-                    for x in interval(-n, -1):
-                        xyz = __coordinate_xyz(x, y, z, x0, y0, z0)
-                        rad += radiation_power / (xyz * 2 ** ((math.sqrt(xyz) * x) / ((x - x0) * d)))
-            for x in interval(-n, k - n):
-                for y in interval(l, m):
-                    for z in interval(-n, -1):
-                        xyz = __coordinate_xyz(x, y, z, x0, y0, z0)
-                        rad += radiation_power / (xyz * 2 ** ((math.sqrt(xyz) * z) / ((z - z0) * d)))
-                    for z in interval(l - 2 * n, l - n):
-                        xyz = __coordinate_xyz(x, y, z, x0, y0, z0)
-                        rad += radiation_power / (xyz * 2 ** ((math.sqrt(xyz) * (z - l + 2 * n)) / ((z - z0) * d)))
-            radiation_list.append(Radiation(x0, z0, rad))
-    return radiation_list
+    validate(k, l, m, n, y0, d, p, r)
+    try:
+        radiation_list = []
+        radiation_power = __radiation_power(p, r)
+        for x0 in interval(1, (k - 2 * n - 1)):
+            for z0 in interval(1, (l - 2 * n - 1)):
+                rad = 0
+                for x in interval(-n, (k - n)):
+                    for z in interval(-n, (l - n)):
+                        for y in interval(m, m + n):
+                            xyz = __coordinate_xyz(x, y, z, x0, y0, z0)
+                            if xyz == 0:
+                                raise IncorrectValues('x не должно быть равно x0, y не должно быть равно y0, z не должно быть равно z0 одновременно')
+                            if y == y0:
+                                raise IncorrectValues('y не должно быть равно y0')
+                            rad += radiation_power / (xyz * 2 ** ((math.sqrt(xyz) * (y - m)) / ((y - y0) * d)))
+                        for y in interval(-n, -1):
+                            xyz = __coordinate_xyz(x, y, z, x0, y0, z0)
+                            if xyz == 0:
+                                raise IncorrectValues('x не должно быть равно x0, y не должно быть равно y0, z не должно быть равно z0 одновременно')
+                            if y == y0:
+                                raise IncorrectValues('y не должно быть равно y0')
+                            rad += radiation_power / (xyz * 2 ** ((math.sqrt(xyz) * y) / ((y - y0) * d)))
+                for y in interval(l, m):  # Сюда никогда не зайдёт если l > m
+                    for z in interval(l, l - 2 * n):  # Какой-то сакральный смысл у этого цикла? в него никогда не зайдёт, l всегда больше l - 2 * n. Цикл выше, не работающий в половине случаев тоже бессмысленный получается
+                        for x in interval(k - 2 * n, k - n):
+                            xyz = __coordinate_xyz(x, y, z, x0, y0, z0)
+                            if xyz == 0:
+                                raise IncorrectValues('x не должно быть равно x0, y не должно быть равно y0, z не должно быть равно z0 одновременно')
+                            if y == y0:
+                                raise IncorrectValues('x не должно быть равно x0')
+                            rad += radiation_power / (xyz * 2 ** ((math.sqrt(xyz) * (x - k + 2 * n)) / ((x - x0) * d)))
+                        for x in interval(-n, -1):
+                            xyz = __coordinate_xyz(x, y, z, x0, y0, z0)
+                            if xyz == 0:
+                                raise IncorrectValues('x не должно быть равно x0, y не должно быть равно y0, z не должно быть равно z0 одновременно')
+                            if y == y0:
+                                raise IncorrectValues('x не должно быть равно x0')
+                            rad += radiation_power / (xyz * 2 ** ((math.sqrt(xyz) * x) / ((x - x0) * d)))
+                for x in interval(-n, k - n):
+                    for y in interval(l, m):  # Сюда никогда не зайдёт если l > m
+                        for z in interval(-n, -1):
+                            xyz = __coordinate_xyz(x, y, z, x0, y0, z0)
+                            if xyz == 0:
+                                raise IncorrectValues('x не должно быть равно x0, y не должно быть равно y0, z не должно быть равно z0 одновременно')
+                            if y == y0:
+                                raise IncorrectValues('z не должно быть равно z0')
+                            rad += radiation_power / (xyz * 2 ** ((math.sqrt(xyz) * z) / ((z - z0) * d)))
+                        for z in interval(l - 2 * n, l - n):
+                            xyz = __coordinate_xyz(x, y, z, x0, y0, z0)
+                            if xyz == 0:
+                                raise IncorrectValues('x не должно быть равно x0, y не должно быть равно y0, z не должно быть равно z0 одновременно')
+                            if y == y0:
+                                raise IncorrectValues('z не должно быть равно z0')
+                            rad += radiation_power / (xyz * 2 ** ((math.sqrt(xyz) * (z - l + 2 * n)) / ((z - z0) * d)))
+                radiation_list.append(Radiation(x0, z0, rad))
+        return radiation_list
+    except ZeroDivisionError:
+        raise IncorrectValues('Некорректные значения')
+
+
+def validate(k, l, m, n, y0, d, p, r):
+    if k < 0:
+        raise IncorrectValues('k не должно быть меньше 0')
+    if l <= 0:
+        raise IncorrectValues('l должно быть больше 0')
+    if m <= 0:
+        raise IncorrectValues('m должно быть больше 0')
+    if n <= 0:
+        raise IncorrectValues('n должно быть больше 0')
+    if y0 < 0:
+        raise IncorrectValues('y0 не должно быть меньше 0')
+    if d <= 0:
+        raise IncorrectValues('d должно быть больше 0')
+    if p < 0:
+        raise IncorrectValues('p не должно быть меньше 0')
+    if r < 0:
+        raise IncorrectValues('r не должно быть меньше 0')
+    if n > k / 2 - 1:
+        raise IncorrectValues('Верхняя граница n равна k / 2 - 1')
+    if n > l / 2 - 1:
+        raise IncorrectValues('Верхняя граница n равна l / 2 - 1')
+
